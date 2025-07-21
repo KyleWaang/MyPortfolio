@@ -6,6 +6,10 @@ import Contact from './Contact'
 import Service from './Service'
 import Project from './Project'
 import Layout from '../components/Layout'
+
+import Signup from "./user/Signup.jsx";
+import Signin from '../lib/Signin.jsx'
+
 const MainRouter = () => {
   return (
     <div>
@@ -16,6 +20,9 @@ const MainRouter = () => {
         <Route exact path="/service" element={<Service />} />
         <Route exact path="/project" element={<Project />} />
         <Route exact path="/contact" element={<Contact />} />
+
+        <Route exact path="/signup" element={<Signup />} />
+        <Route exact path="/signin" element={<Signin />} />
       </Routes>
     </div>
   )

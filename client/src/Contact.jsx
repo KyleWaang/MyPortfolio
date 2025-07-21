@@ -1,31 +1,16 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form';
 
 export default function Contact() {
   // Navigation hook from React Router to redirect user
   const navigate = useNavigate()
 
-  // State to track form input fields
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    contactNumber: '',
-    email: '',
-    message: ''
-  })
-
-  // Update form state when input fields change
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
-
-  // Handle form submission
-  const handleSubmit = (event) => {
-    event.preventDefault() // Prevent page reload
-
+  // State to manage contact form data
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  
+  const onSubmit = (data) => {
     // Log the captured form data (for now)
-    console.log('Contact form submitted:', contactForm)
+    console.log('Contact form submitted:', data)
 
     // Redirect to the Home Page after submission
     navigate('/')
@@ -44,56 +29,30 @@ export default function Contact() {
       </div>
 
       {/* Contact Form */}
-      <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1rem' }}>
+      <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'grid', gap: '1rem' }}>
         <div style={{ display: 'flex', gap: '1rem' }}>
-          <input
-            type="text"
-            name="firstName"
-            placeholder="First Name"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-            style={{ flex: 1, padding: '0.5rem' }}
-          />
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Last Name"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-            style={{ flex: 1, padding: '0.5rem' }}
-          />
+          
+          <label>First Name</label>
+          <input type="text" {...register("firstName", { required: true })} style={{ flex: 1, padding: '0.5rem' }} />
+          {errors.firstName && <p>First Name is required</p>}
+
+          <label>Last Name</label>
+          <input type="text" {...register("lastName", { required: true })} style={{ flex: 1, padding: '0.5rem' }} />
+          {errors.lastName && <p>Last Name is required</p>}
+
         </div>
 
-        <input
-          type="text"
-          name="contactNumber"
-          placeholder="Contact Number"
-          value={formData.contactNumber}
-          onChange={handleChange}
-          style={{ padding: '0.5rem' }}
-        />
+        <label>Contact Number</label>
+        <input type="text" {...register("contactNumber", { required: true })} style={{ padding: '0.5rem' }} />
+        {errors.contactNumber && <p>Contact Number is required</p>}
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email Address"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          style={{ padding: '0.5rem' }}
-        />
-
-        <textarea
-          name="message"
-          placeholder="Your Message"
-          value={formData.message}
-          onChange={handleChange}
-          rows="5"
-          required
-          style={{ padding: '0.5rem' }}
-        ></textarea>
+        <label>Email</label>
+        <input type="email" {...register("email", { required: true, pattern: /^\S+@\S+$/i })} style={{ padding: '0.5rem' }} />
+        {errors.email && <p>Email is required and must be valid</p>}
+        
+        <label>Message</label>
+        <textarea {...register("message", { required: true })} rows="5" style={{ padding: '0.5rem' }} />
+        {errors.message && <p>Message is required</p>}
 
         <button
           type="submit"
